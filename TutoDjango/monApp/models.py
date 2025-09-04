@@ -19,6 +19,10 @@ class Rayon(models.Model):
         return self.nomRayon
 class Contenir(models.Model):
     qte=models.PositiveSmallIntegerField()
-    refProd=models.ForeignKey(Produit, on_delete=models.CASCADE)
-    idrayon=models.ForeignKey(Rayon,on_delete=models.CASCADE)
+    nomprod=models.ForeignKey(Produit, on_delete=models.CASCADE)
+    nomRayon=models.ForeignKey(Rayon,on_delete=models.CASCADE)
     
+    class Meta:
+        unique_together=("nomprod","nomRayon")
+    def __str__(self):
+        return f"{self.nomprod} dans {self.nomRayon} pour {self.qte}"
