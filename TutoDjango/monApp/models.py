@@ -18,7 +18,7 @@ class Rayon(models.Model):
     def __str__(self):
         return self.nomRayon
 class Contenir(models.Model):
-    qte=models.DecimalField(max_digits=1000000)
+    qte=models.PositiveSmallIntegerField()
     refProd=models.ForeignKey(Produit, on_delete=models.CASCADE)
     idrayon=models.ForeignKey(Rayon,on_delete=models.CASCADE)
     
