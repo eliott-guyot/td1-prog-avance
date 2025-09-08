@@ -5,10 +5,10 @@ class Categorie(models.Model):
     def __str__(self):
         return self.nomCat  
 class Statut(models.Model):
-    idStatus=models.AutoField(primary_key=True)
-    libelléStatut=models.CharField(max_length=200)
+    idStatut=models.AutoField(primary_key=True)
+    libelleStatut=models.CharField(max_length=200)
     def __str__(self):
-        return f"{self.idStatut} pour : {self.libelléStatut}"
+        return f"{self.idStatut} pour : {self.libelleStatut}"
 
 class Produit(models.Model):
     refProd = models.AutoField(primary_key=True)

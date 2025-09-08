@@ -13,8 +13,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Statut',
             fields=[
-                ('idStatus', models.AutoField(primary_key=True, serialize=False)),
-                ('libelléStatust', models.CharField(max_length=200)),
+                ('idStatut', models.AutoField(primary_key=True, serialize=False)),
+                ('libelleStatus', models.CharField(max_length=200)),
             ],
         ),
     ]
