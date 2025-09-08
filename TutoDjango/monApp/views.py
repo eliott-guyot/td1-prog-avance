@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Produit
+from .models import Produit,Statut
 from django .http import HttpResponse
 
 def home(request  ):
@@ -19,5 +19,14 @@ def ListProduits(request):
     html += "<ul>"
     for p in prdts:
         html += f"<li>{p.intituleProd}</li>"
+    html += "</ul>"
+    return HttpResponse(html)
+
+def ListStatut(request):
+    stt=Statut.objects.all()
+    html=f" <h1>Produit</h1>"
+    html += "<ul>"
+    for p in stt:
+        html += f"<li>{p.libelléStatut}</li>"
     html += "</ul>"
     return HttpResponse(html)
