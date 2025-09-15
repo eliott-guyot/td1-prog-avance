@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Produit,Statut,Categorie
+from .models import Produit,Statut,Categorie,Rayon
 from django.http import HttpResponse, Http404
 
 
@@ -9,38 +9,26 @@ def home(request,param=None):
     return HttpResponse("Bonjour Monde!")
 
 def aboutus(request):
-    return HttpResponse("<h1>à propos de nous!</h1>")
+    return render(request, 'monApp/about.html')
+
 def contactus(request):
-    return HttpResponse("<h1>nous contacter!</h1>")
+    return render(request, 'monApp/contactus.html')
 
 def ListProduits(request):
     prdts = Produit.objects.all()
-    return HttpResponse(f"""
-        <p>Mes produits sont :<p>
-        <ul>
-            <li>{prdts[0].intituleProd}</li>
-            <li>{prdts[1].intituleProd }</li>
-            <li>{prdts[2].intituleProd }</li>
-        </ul>
-    """)
+    return render(request, 'monApp/list_produits.html',{'prdts': prdts})
 
 def ListStatut(request):
     stt=Statut.objects.all()
-    html=f" <h1>Produit</h1>"
-    html += "<ul>"
-    for p in stt:
-        html += f"<li>{p.libelléStatut}</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+    return render(request, 'monApp/listStatut.html',{'stt': stt})
+def listeRayon(request):
+    rayon=Rayon.objects.all()
+    return render(request, 'monApp/listeRayon.html',{'rayon': rayon})
+
 
 def ListCat(request):
     cat=Categorie.objects.all()
-    html=f" <h1>Produit</h1>"
-    html += "<ul>"
-    for p in cat:
-        html += f"<li>{p.nomCat}</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+    return render(request, 'monApp/listeCat.html',{'cat': cat})
 
 def accueil(request,param):
     return HttpResponse("<h1>Hello " + param + " ! You're connected</h1>")
