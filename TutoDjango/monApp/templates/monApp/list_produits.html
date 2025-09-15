@@ -1,20 +1,15 @@
-<html>
+{% extends 'monApp/base.html' %}
+{% block contenu %}
 
-<head>
-    <title>Mon app DJANGO</title>
-</head>
-
-<body>
-    <p>
-        J'ai
-        {% if prdts|length < 5 %} peu de {% elif prdts|length < 10 %} quelques {% else %} beaucoup de {% endif %}
-            produits préférés. </p>
-            <ul>
-                {% for prdt in prdts %}
-                <li>{{ prdt.intituleProd | upper }}</li>
-
-                {% endfor %}
-            </ul>
-</body>
-
-</html>
+<h1>Hello les produits !</h1>
+<p>
+    J'ai
+    {% if prdcts|length < 5 %} peu de {% elif prdcts|length < 10 %} quelques {% else %} beaucoup de {% endif %} produits
+        préférés. </p>
+        <p>Mes produits préférés sont :</p>
+        <ul>
+            {% for prdct in prdts %}
+            <li>{{ prdct.intituleProd| upper }}</li>
+            {% endfor %}
+        </ul>
+        {% endblock %}

@@ -1,20 +1,14 @@
-<html>
-
-<head>
-    <title>Mon app DJANGO</title>
-</head>
-
-<body>
-    <p>
-        J'ai
-        {% if cat|length < 5 %} peu de {% elif cat|length < 10 %} quelques {% else %} beaucoup de {% endif %}
-            rayon préférés. </p>
-            <ul>
-                {% for ray in rayon %}
-                <li>{{ ray.nomRayon | upper }}</li>
-
-                {% endfor %}
-            </ul>
-</body>
-
-</html>
+{% extends 'monApp/base.html' %}
+{% block contenu %}
+<h1>Hello les rayon !</h1>
+<p>
+    J'ai
+    {% if prdcts|length < 5 %} peu de {% elif prdcts|length < 10 %} quelques {% else %} beaucoup de {% endif %}
+        rayon préférés. </p>
+        <p>Mes rayons préférés sont :</p>
+        <ul>
+            {% for ray in rayon %}
+            <li>{{ ray.nomRayon| upper }}</li>
+            {% endfor %}
+        </ul>
+        {% endblock %}
