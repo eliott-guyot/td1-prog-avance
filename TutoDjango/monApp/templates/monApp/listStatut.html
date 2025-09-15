@@ -1,15 +1,33 @@
 
-{% extends 'monApp/base.html' %}
+        {% extends 'monApp/base.html' %}
+{% block menu %}
+<h1>Liste des statuts</h1>
+{% endblock %}
 {% block contenu %}
-<h1>Hello les statut !</h1>
+<table class="table">
+<thead>
+<th>Id</th>
+<th>Nom statut</th>
+</thead>
+<tbody>
+{% for statut in stt %}
+<tr>
+    <td>{{ statut.idStatut }} </td>
+
+<td>{{ statut.libelleStatut }} </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
 <p>
-    J'ai
-    {% if prdcts|length < 5 %} peu de {% elif prdcts|length < 10 %} quelques {% else %} beaucoup de {% endif %}
-        statut préférés. </p>
-        <p>Mes statut préférés sont :</p>
-        <ul>
-            {% for statut in stt %}
-            <li>{{ statut.libelleStatut| upper }}</li>
-            {% endfor %}
-        </ul>
-        {% endblock %}
+J'ai
+{% if prdts|length < 5 %}
+peu de
+{% elif prdts|length < 10 %}
+quelques
+{% else %}
+beaucoup de
+{% endif %}
+statut préférés.
+</p>
+{% endblock %}
