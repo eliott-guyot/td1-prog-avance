@@ -1,0 +1,26 @@
+{% extends 'monApp/base.html' %}
+{% block menu %}
+<h1>{{titremenu}}</h1>
+{% endblock %}
+{% block contenu %}
+<table class="table">
+    
+        <thead>
+        <th>Id</th>
+        <th>Nom de la catégorie</th>
+        </thead>
+    <tbody>
+        {% for cate in cat %}
+        <tr>
+            <td>{{ cate.idCat }} </td>
+            <td><a href="{% url 'dtl_cat' cate.idCat %}">{{ cate.nomCat }}</a></td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>
+    J'ai
+    {% if prdts|length < 5 %} peu de {% elif prdts|length < 10 %} quelques {% else %} beaucoup de {% endif %} produits
+        préférés. </p>
+        {% endblock %}

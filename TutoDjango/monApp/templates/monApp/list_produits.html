@@ -17,7 +17,7 @@
         {% for prdt in prdts %}
         <tr>
             <td>{{ prdt.refProd }} </td>
-            <td>{{ prdt.intituleProd }} </td>
+            <td><a href="{% url 'dtl_prdt' prdt.intituleProd %}">{{ prdt.intituleProd }}</a></td>
             <td>{{ prdt.prixUnitaireProd }} </td>
             <td>{{ prdt.dateFabProd }} </td>
             <td>{{ prdt.categorie }} </td>

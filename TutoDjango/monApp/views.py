@@ -79,3 +79,65 @@ class ProduitDetailView(DetailView):
         context = super(ProduitDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du produit"
         return context
+    
+class CategorieListView(ListView):
+    model = Categorie
+    template_name = "monApp/list_categorie.html"
+    context_object_name = "cat"
+
+    def get_context_data(self, **kwargs):
+        context = super(CategorieListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes produits"
+        return context
+    
+
+class CategorieDetailView(DetailView):
+    model = Categorie
+    template_name = "monApp/detail_categorie.html"
+    context_object_name = "cat"
+    def get_context_data(self, **kwargs):
+        context = super(CategorieDetailView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Détail de la categorie"
+        return context
+    
+class StatutListView(ListView):
+    model = Statut
+    template_name = "monApp/list_Statut.html"
+    context_object_name = "stt"
+
+    def get_context_data(self, **kwargs):
+        context = super(StatutListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes categorie"
+        return context
+    
+
+class StatutDetailView(DetailView):
+    model = Statut
+    template_name = "monApp/detail_Statut.html"
+    context_object_name = "stt"
+    def get_context_data(self, **kwargs):
+        context = super(StatutDetailView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Détail de la categorie"
+        return context
+    
+
+class RayonListView(ListView):
+    model = Rayon
+    template_name = "monApp/list_Rayon.html"
+    context_object_name = "Rayon"
+
+    def get_context_data(self, **kwargs):
+        context = super(RayonListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes rayons"
+        return context
+    
+
+class RayonDetailView(DetailView):
+    model = Rayon
+    template_name = "monApp/detail_Rayon.html"
+    context_object_name = "Rayon"
+    def get_context_data(self, **kwargs):
+        context = super(RayonDetailView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Détail du rayon"
+        return context
+    
