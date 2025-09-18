@@ -12,6 +12,8 @@ urlpatterns = [
 
     path("ListCat", views.ListCat, name="ListCat"),
     path("home/<param>",views.HomeView.as_view() ,name='accueil'),
+    path("produits/",views.ProduitListView.as_view()),
+    path("produit/<pk>/",views.ProduitDetailView.as_view()),
     
 
 ]
