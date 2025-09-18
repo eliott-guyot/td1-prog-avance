@@ -33,14 +33,29 @@ def accueil(request,param):
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
-    def post(self, request, **kwargs):
-        return render(request, self.template_name)
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        if self.kwargs.get('param')!=None:
+            context['titreh1'] = "Hello DJANGO "+self.kwargs.get('param')
+        else:
+            context['titreh1'] = "Hello DJANGO"
+        return context
     
 class AboutView(TemplateView):
     template_name = "monApp/page_home.html"
     def get_context_data(self, **kwargs):
         context = super(AboutView, self).get_context_data(**kwargs)
         context['titreh1'] = "About us..."
+        return context
+    def post(self, request, **kwargs):
+        return render(request, self.template_name)
+    
+
+class ContactView(TemplateView):
+    template_name = "monApp/page_home.html"
+    def get_context_data(self, **kwargs):
+        context = super(ContactView, self).get_context_data(**kwargs)
+        context['titreh1'] = "contact us..."
         return context
     def post(self, request, **kwargs):
         return render(request, self.template_name)
