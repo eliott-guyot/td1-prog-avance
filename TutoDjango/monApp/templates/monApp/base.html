@@ -18,6 +18,18 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                </li>
+                {%else%}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+                </li>
+                {%endif%}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'lst_prdts' %}">Produits</a>
 
@@ -30,6 +42,11 @@
                 <a class="nav-link" href="{% url 'lst_rayon' %}">Rayons</a>
 
                 </li>
+                                <li class="nav-item">
+                <a class="nav-link" href="{% url 'lst_stt' %}">Statut</a>
+
+                </li>
+
             </ul>
         </div>
     </nav>
