@@ -10,10 +10,11 @@
         <th>Nom du rayon</th>
         </thead>
     <tbody>
-        {% for ray in rayon %}
+        {% for ray in Rayon %}
         <tr>
             <td>{{ ray.idRayon }} </td>
-            <td><a href="{% url 'dtl_rayon' ray.idRayon %}">{{ cate.nomRayon }}</a></td>
+            <td><a href="{% url 'dtl_rayon' ray.idRayon %}">{{ ray.nomRayon }}</a></td>
+
 
         </tr>
         {% endfor %}
