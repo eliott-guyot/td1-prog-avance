@@ -1,6 +1,6 @@
 from django.shortcuts import render
-
-from monApp.forms import ContactUsForm
+from django.forms import BaseModelForm
+from monApp.forms import ContactUsForm, ProduitForm
 from .models import Produit,Statut,Categorie,Rayon
 from django.http import HttpResponse, Http404
 from django.views.generic import *
@@ -191,3 +191,42 @@ def ContactView(request):
 
 def EmailsentView(request):
     return render(request,"monApp/email-sent.html")
+
+
+def ProduitCreate(request):
+    if request.method == 'POST':
+        form = ProduitForm(request.POST)
+        if form.is_valid():
+            prdt = form.save()
+            return redirect('dtl_prdt', prdt.refProd)
+    else:
+        form = ProduitForm()
+    return render(request, "monApp/create_produit.html", {'form': form})
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/create_produit.html"
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+    
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/update_produit.html"
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+    
+def ProduitUpdate(request, id):
+    prdt = Produit.objects.get(id=id)
+    if request.method == 'POST':
+        form = ProduitForm(request.POST, instance=prdt)
+        if form.is_valid():
+            # mettre à jour le produit existant dans la base de données
+            form.save()
+            # rediriger vers la page détaillée du produit que nous venons de mettre à jour
+            return redirect('dtl_prdt', prdt.refProd)
+    else:
+        form = ProduitForm(instance=prdt)
+    return render(request,'monApp/update_produit.html', {'form': form})

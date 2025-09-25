@@ -17,13 +17,14 @@
         {% for prdt in prdts %}
         <tr>
             <td>{{ prdt.refProd }} </td>
-            <td><a href="{% url 'dtl_prdt' prdt.intituleProd %}">{{ prdt.intituleProd }}</a></td>
+            <td><a href="{% url 'dtl_prdt' prdt.refProd %}">{{ prdt.intituleProd }}</a></td>
             <td>{{ prdt.prixUnitaireProd }} </td>
             <td>{{ prdt.dateFabProd }} </td>
             <td>{{ prdt.categorie }} </td>
             <td>{{ prdt.status }} </td>
         </tr>
         {% endfor %}
+        <a href="{% url 'crt-prdt' %}">Créer un nouveau produit</a>
     </tbody>
 </table>
 <p>
