@@ -177,14 +177,17 @@ def ContactView(request):
     titreh1 = "Contact us !"
     if request.method=='POST':
         form = ContactUsForm(request.POST)
-    if form.is_valid():
-        send_mail(
-        subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via MonProjet Contact Us form',
-        message=form.cleaned_data['message'],
-        from_email=form.cleaned_data['email'],
-        recipient_list=['admin@monprojet.com'],
-        )
-        return redirect('email-sent')
+        if form.is_valid():
+            send_mail(
+            subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via MonProjet Contact Us form',
+            message=form.cleaned_data['message'],
+            from_email=form.cleaned_data['email'],
+            recipient_list=['admin@monprojet.com'],
+            )
+            return redirect('email-sent')
     else:
         form = ContactUsForm()
     return render(request, "monApp/page_home.html",{'titreh1':titreh1, 'form':form})
+
+def EmailsentView(request):
+    return render(request,"monApp/email-sent.html")
