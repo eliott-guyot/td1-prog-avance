@@ -8,6 +8,10 @@
 <li>Référence catégorie : {{ cat.idCat }} </li>
 <li>nom de la catégorie : {{ cat.nomCat }} </li>
 </ul>
-<a href="{% url 'lst_cat' %}">Retour à la liste des catégories</a>
+<a href="{% url 'cat-chng' cat.idCat %}">modifier</a>
+<br>
+<a href="{% url 'dlt-cat' cat.idCat %}">supprimer</a>
+<br>
+<a href="{% url 'lst_cat' %}">Retour à la liste des categorie</a>
 
 {% endblock %}

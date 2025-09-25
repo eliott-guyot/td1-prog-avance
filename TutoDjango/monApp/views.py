@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.forms import BaseModelForm
-from monApp.forms import ContactUsForm, ProduitForm
+from monApp.forms import ContactUsForm, ProduitForm,CategorieForm
 from .models import Produit,Statut,Categorie,Rayon
 from django.http import HttpResponse, Http404
 from django.views.generic import *
@@ -230,3 +230,76 @@ def ProduitUpdate(request, id):
     else:
         form = ProduitForm(instance=prdt)
     return render(request,'monApp/update_produit.html', {'form': form})
+
+class ProductDeleteView(DeleteView):
+    model = Produit
+    template_name = "monApp/delete_produit.html"
+    success_url = reverse_lazy('lst_prdts')
+
+def produit_delete(request, id):
+    prdt = Produit.objects.get(id=id) # nécessaire pour GET et pour POST
+    if request.method == 'POST':
+        # supprimer le produit de la base de données
+        prdt.delete()
+        # rediriger vers la liste des produit
+        return redirect('lst_prdts')
+    # pas besoin de « else » ici. Si c'est une demande GET, continuez simplement
+    return render(request, 'monApp/delete_produit.html', {'object': prdt})
+
+
+
+
+
+
+def CategorieCreate(request):
+    if request.method == 'POST':
+        form = CategorieForm(request.POST)
+        if form.is_valid():
+            cat = form.save()
+            return redirect('dtl_cat', cat.idCat)
+    else:
+        form = ProduitForm()
+    return render(request, "monApp/create_categorie.html", {'form': form})
+class CategorieCreateView(CreateView):
+    model = Categorie
+    form_class=CategorieForm
+    template_name = "monApp/create_categorie.html"
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        cat = form.save()
+        return redirect('dtl_cat', cat.idCat)
+    
+class CategorieUpdateView(UpdateView):
+    model = Categorie
+    form_class=CategorieForm
+    template_name = "monApp/update_categorie.html"
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        cat = form.save()
+        return redirect('cat-chng', cat.idCat)
+    
+def CategorieUpdate(request, id):
+    cat = Categorie.objects.get(id=id)
+    if request.method == 'POST':
+        form = CategorieForm(request.POST, instance=cat)
+        if form.is_valid():
+            # mettre à jour le produit existant dans la base de données
+            form.save()
+            # rediriger vers la page détaillée du produit que nous venons de mettre à jour
+            return redirect('cat-chng', cat.idCat)
+    else:
+        form = CategorieForm(instance=cat)
+    return render(request,'monApp/update_categorie.html', {'form': form})
+
+class CategorieDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete_categorie.html"
+    success_url = reverse_lazy('lst_cat')
+
+def categorie_delete(request, id):
+    cat = Categorie.objects.get(id=id) # nécessaire pour GET et pour POST
+    if request.method == 'POST':
+        # supprimer le produit de la base de données
+        cat.delete()
+        # rediriger vers la liste des produit
+        return redirect('lst_cat')
+    # pas besoin de « else » ici. Si c'est une demande GET, continuez simplement
+    return render(request, 'monApp/delete_categorie.html', {'object': cat})

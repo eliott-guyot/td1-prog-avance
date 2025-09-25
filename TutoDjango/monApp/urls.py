@@ -26,6 +26,10 @@ urlpatterns = [
     path('email-sent/', views.EmailsentView, name='email-sent'),
     path("produit/",views.ProduitCreateView.as_view(), name="crt-prdt"),
     path("produit/<pk>/update/",views.ProduitUpdateView.as_view(), name="prdt-chng"),
+    path("produit/<pk>/delete/",views.ProductDeleteView.as_view(), name="dlt-prdt"),
+    path("categorie/",views.CategorieCreateView.as_view(), name="crt-cat"),
+    path("categorie/<pk>/update/",views.CategorieUpdateView.as_view(), name="cat-chng"),
+    path("categorie/<pk>/delete/",views.CategorieDeleteView.as_view(), name="dlt-cat"),
 
 
 
