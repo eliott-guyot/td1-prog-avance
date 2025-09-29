@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.shortcuts import redirect
-
+from django.db.models import Count
 
 
 def aboutus(request):
@@ -92,14 +92,29 @@ class CategorieListView(ListView):
         context['titremenu'] = "Liste de mes produits"
         return context
     
+class CategorieListView(ListView):
+    model = Categorie
+    template_name = "monApp/list_categories.html"
+    context_object_name = "cat"
+    def get_queryset(self):
+    # Annoter chaque catégorie avec le nombre de produits liés
+        return Categorie.objects.annotate(nb_produits=Count('produits'))
+    def get_context_data(self, **kwargs):
+        context = super(CategorieListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes catégories"
+        return context
+
 
 class CategorieDetailView(DetailView):
     model = Categorie
     template_name = "monApp/detail_categorie.html"
     context_object_name = "cat"
+    def get_queryset(self):
+        return Categorie.objects.annotate(nb_produits=Count('produits'))
     def get_context_data(self, **kwargs):
         context = super(CategorieDetailView, self).get_context_data(**kwargs)
-        context['titremenu'] = "Détail de la categorie"
+        context['titremenu'] = "Détail de la catégorie"
+        context['prdts'] = self.object.produits.all()
         return context
     
 class StatutListView(ListView):

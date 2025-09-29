@@ -1,0 +1,29 @@
+{% extends 'monApp/base.html' %}
+{% block menu %}
+<h1>{{titremenu}}</h1>
+{% endblock %}
+{% block contenu %}
+<table class="table">
+    <thead>
+        <th>Id</th>
+        <th>Nom catégorie</th>
+        <th>Nombre de Produits</th>
+    </thead>
+    <tbody>
+        {% for cate in cat %}
+        <tr>
+            <td><a href="{% url 'dtl_cat' cate.idCat %}">{{ cate.idCat }}</a></td>
+            <td>{{ cate.nomCat }} </td>
+            <td>{{ cate.nb_produits }} </td>
+            <td>
+                <a href="{% url 'dtl_cat' cate.idCat %}" class="btn btn-primary mt-2">Détails</a>
+                <a href="{% url 'cat-chng' cate.idCat %}" class="btn btn-warning mt-2">Modifier</a>
+                <a href="{% url 'dlt-cat' cate.idCat %}" class="btn btn-danger mt-2">Supprimer</a>
+
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
