@@ -8,6 +8,9 @@
 <li>Référence catégorie : {{ statut.idSatut }} </li>
 <li>nom de la catégorie : {{ statut.libelleStatut }} </li>
 </ul>
-<a href="{% url 'lst_stt' %}">Retour à la liste des catégories</a>
-
+<a href="{% url 'stt-chng' stt.idStatut %}">modifier</a>
+<br>
+<a href="{% url 'dlt-stt' stt.idStatut %}">supprimer</a>
+<br>
+<a href="{% url 'lst_stt' %}">Retour à la liste des statuts</a>
 {% endblock %}

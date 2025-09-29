@@ -5,9 +5,13 @@
 {% block contenu %}
 <h2>{{ ray.nomRayon }}</h2>
 <ul>
-    <li>Référence catégorie : {{ ray.idRayon }} </li>
-    <li>nom de la catégorie : {{ ray.nomRayon }} </li>
+    <li>Référence rayon : {{ ray.idRayon }} </li>
+    <li>nom du rayon : {{ ray.nomRayon }} </li>
 </ul>
+<a href="{% url 'ray-chng' ray.idRayon %}">modifier</a>
+<br>
+<a href="{% url 'dlt-ray' ray.idRayon %}">supprimer</a>
+<br>
 <a href="{% url 'lst_rayon' %}">Retour à la liste des rayons</a>
 
 {% endblock %}

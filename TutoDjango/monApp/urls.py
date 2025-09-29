@@ -30,6 +30,16 @@ urlpatterns = [
     path("categorie/",views.CategorieCreateView.as_view(), name="crt-cat"),
     path("categorie/<pk>/update/",views.CategorieUpdateView.as_view(), name="cat-chng"),
     path("categorie/<pk>/delete/",views.CategorieDeleteView.as_view(), name="dlt-cat"),
+    path("statut/",views.StatutCreateView.as_view(), name="crt-stt"),
+    path("statut/<pk>/update/",views.StatutUpdateView.as_view(), name="stt-chng"),
+    path("statut/<pk>/delete/",views.StatutDeleteView.as_view(), name="dlt-stt"),
+    path("rayon/",views.RayonCreateView.as_view(), name="crt-ray"),
+    path("rayon/<pk>/update/",views.RayonUpdateView.as_view(), name="ray-chng"),
+    path("rayon/<pk>/delete/",views.RayonDeleteView.as_view(), name="dlt-ray"),
+
+
+
+
 
 
 
