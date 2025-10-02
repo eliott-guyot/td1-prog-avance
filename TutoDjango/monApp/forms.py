@@ -9,8 +9,7 @@ class ContactUsForm(forms.Form):
 class ProduitForm(forms.ModelForm):
     class Meta:
         model = Produit
-        #fields = '__all__'
-        exclude = ('categorie', 'statut')
+        fields = '__all__'
     
 class CategorieForm(forms.ModelForm):
     class Meta:

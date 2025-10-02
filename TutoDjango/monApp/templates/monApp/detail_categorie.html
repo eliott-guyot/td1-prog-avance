@@ -5,14 +5,14 @@
         <h4>Détail de la catégorie</h4>
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ ctgr.nomCat }}</h5>
+        <h5 class="card-title">{{ cat.nomCat }}</h5>
         <ul class="list-unstyled">
-            <li><strong>Référence :</strong> {{ ctgr.idCat }}</li>
-            <li><strong>Nom catégorie :</strong> {{ ctgr.nomCat }}</li>
+            <li><strong>Référence :</strong> {{ cat.idCat }}</li>
+            <li><strong>Nom catégorie :</strong> {{ cat.nomCat }}</li>
         </ul>
-        <div class="car-footer text-center">
-            <a href="{% url 'cat-chng' ctgr.idCat %}" class="btn btn-warning mt-2">Modifier</a>
-            <a href="{% url 'dlt-cat' ctgr.idCat %}" class="btn btn-danger mt-2">Supprimer</a>
+        <div class="card-footer text-center">
+            <a href="{% url 'cat-chng' cat.idCat %}" class="btn btn-warning mt-2">Modifier</a>
+            <a href="{% url 'dlt-cat' cat.idCat %}" class="btn btn-danger mt-2">Supprimer</a>
             <a href="{% url 'lst_cat'%}" class="btn btn-info mt-2">Retour</a>
         </div>
     </div>
@@ -31,7 +31,7 @@
                         <h5 class="card-title">{{ prdt.intituleProd }}</h5>
                     </div>
                     <div class="card-body">
-                        <a href="{% url 'dtl-prdt' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                        <a href="{% url 'dtl_prdt' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
                     </div>
                 </div>
             </div>

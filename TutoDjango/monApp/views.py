@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.forms import BaseModelForm
 from monApp.forms import ContactUsForm, ProduitForm,CategorieForm,StatutForm,RayonForm
-from .models import Produit,Statut,Categorie,Rayon
+from .models import Contenir, Produit,Statut,Categorie,Rayon
 from django.http import HttpResponse, Http404
 from django.views.generic import *
 from django.contrib.auth.views import LoginView
@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.shortcuts import redirect
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 
 
 def aboutus(request):
@@ -66,8 +66,9 @@ class ProduitListView(ListView):
     model = Produit
     template_name = "monApp/list_produits.html"
     context_object_name = "prdts"
-    def get_queryset(self ) :
-        return Produit.objects.order_by("prixUnitaireProd")
+    def get_queryset(self):
+        # Charge les catégories et les statuts en même temps
+        return Produit.objects.select_related('categorie').select_related('statut')
     def get_context_data(self, **kwargs):
         context = super(ProduitListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes produits"
@@ -80,16 +81,6 @@ class ProduitDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProduitDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du produit"
-        return context
-    
-class CategorieListView(ListView):
-    model = Categorie
-    template_name = "monApp/list_categorie.html"
-    context_object_name = "cat"
-
-    def get_context_data(self, **kwargs):
-        context = super(CategorieListView, self).get_context_data(**kwargs)
-        context['titremenu'] = "Liste de mes produits"
         return context
     
 class CategorieListView(ListView):
@@ -124,7 +115,7 @@ class StatutListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(StatutListView, self).get_context_data(**kwargs)
-        context['titremenu'] = "Liste de mes categorie"
+        context['titremenu'] = "Liste de mes statuts"
         return context
     
 
@@ -132,22 +123,38 @@ class StatutDetailView(DetailView):
     model = Statut
     template_name = "monApp/detail_Statut.html"
     context_object_name = "stt"
+    def get_queryset(self):
+        return Statut.objects.annotate(nb_produits=Count('produits'))
+
     def get_context_data(self, **kwargs):
         context = super(StatutDetailView, self).get_context_data(**kwargs)
-        context['titremenu'] = "Détail de la categorie"
+        context['titremenu'] = "Détail des statuts"
+        context['prdts'] = self.object.produits.all()
+
         return context
     
 
 class RayonListView(ListView):
     model = Rayon
     template_name = "monApp/list_Rayon.html"
-    context_object_name = "Rayon"
-
+    context_object_name = "ryns"
+    def get_queryset(self):
+        # Précharge tous les "contenir" de chaque rayon,
+        # et en même temps le produit de chaque contenir
+        return Rayon.objects.prefetch_related(
+        Prefetch("contenir_rayon", queryset=Contenir.objects.select_related("nomprod"))
+        )
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes rayons"
+        ryns_dt = []
+        for rayon in context['ryns']:
+            total = 0
+            for contenir in rayon.contenir_rayon.all():
+                total += contenir.nomprod.prixUnitaireProd * contenir.qte
+                ryns_dt.append({'rayon': rayon,'total_stock': total})
+        context['ryns_dt'] = ryns_dt
         return context
-    
 
 class RayonDetailView(DetailView):
     model = Rayon
@@ -156,8 +163,24 @@ class RayonDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(RayonDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du rayon"
-        return context
+        prdts_dt = []
+        total_rayon = 0
+        total_nb_produit = 0
+        for contenir in self.object.contenir_rayon.all():
+            total_produit = contenir.nomprod.prixUnitaireProd * contenir.qte
+            prdts_dt.append({ 'produit': contenir.nomprod,
+            'qte': contenir.qte,
+            'prix_unitaire': contenir.nomprod.prixUnitaireProd,
+            'total_produit': total_produit} )
+            total_rayon += total_produit
+            total_nb_produit += contenir.qte
+        print(prdts_dt)
+        print('prdts_dt')
     
+        context['prdts_dt'] = prdts_dt
+        context['total_rayon'] = total_rayon
+        context['total_nb_produit'] = total_nb_produit
+        return context            
 class ConnectView(LoginView):
     template_name = 'monApp/page_login.html'
     def post(self, request, **kwargs):

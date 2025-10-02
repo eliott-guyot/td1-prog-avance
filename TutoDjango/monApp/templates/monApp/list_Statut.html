@@ -1,28 +1,28 @@
+
 {% extends 'monApp/base.html' %}
 {% block menu %}
 <h1>{{titremenu}}</h1>
 {% endblock %}
 {% block contenu %}
 <table class="table">
-    
-        <thead>
+    <thead>
         <th>Id</th>
-        <th>Nom du statut</th>
-        </thead>
+        <th>Nom statut</th>
+    </thead>
     <tbody>
-        {% for statut in stt %}
+        {% for stat in stt %}
         <tr>
-            <td>{{ statut.idStatut }} </td>
-            <td><a href="{% url 'dtl_stt' statut.idStatut %}">{{ statut.libelleStatut }}</a></td>
+            <td>{{ stat.idStatut }} </td>
+            <td><a href="{% url 'dtl_stt' stat.idStatut %}">{{ stat.libelleStatut }}</a></td>
+            <td>
+                <a href="{% url 'dtl_stt' stat.idStatut %}" class="btn btn-primary mt-2">Détails</a>
+                <a href="{% url 'stt-chng' stat.idStatut %}" class="btn btn-warning mt-2">Modifier</a>
+                <a href="{% url 'dlt-stt' stat.idStatut %}" class="btn btn-danger mt-2">Supprimer</a>
 
+
+            </td>
         </tr>
         {% endfor %}
-        <a href="{% url 'crt-stt' %}">Créer un nouveau statut</a>
-
     </tbody>
 </table>
-<p>
-    J'ai
-    {% if prdts|length < 5 %} peu de {% elif prdts|length < 10 %} quelques {% else %} beaucoup de {% endif %} produits
-        préférés. </p>
-        {% endblock %}
+{% endblock %}

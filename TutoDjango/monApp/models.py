@@ -28,8 +28,8 @@ class Rayon(models.Model):
         return self.nomRayon
 class Contenir(models.Model):
     qte=models.PositiveSmallIntegerField()
-    nomprod=models.ForeignKey(Produit, on_delete=models.CASCADE)
-    nomRayon=models.ForeignKey(Rayon,on_delete=models.CASCADE)
+    nomprod=models.ForeignKey(Produit, on_delete=models.CASCADE,related_name='contenir_produit')
+    nomRayon=models.ForeignKey(Rayon,on_delete=models.CASCADE, related_name='contenir_rayon')
     
     class Meta:
         unique_together=("nomprod","nomRayon")

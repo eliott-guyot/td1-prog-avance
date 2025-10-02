@@ -4,21 +4,24 @@
 {% endblock %}
 {% block contenu %}
 <table class="table">
-    
-        <thead>
+    <thead>
         <th>Id</th>
-        <th>Nom du rayon</th>
-        </thead>
+        <th>Nom rayon</th>
+        <th>Valeur marchande du rayon</th>
+    </thead>
     <tbody>
-        {% for ray in Rayon %}
+        {% for data in ryns_dt %}
         <tr>
-            <td>{{ ray.idRayon }} </td>
-            <td><a href="{% url 'dtl_rayon' ray.idRayon %}">{{ ray.nomRayon }}</a></td>
-
-
+            <td><a href="{% url 'dtl_rayon' data.rayon.idRayon %}">{{ data.rayon.idRayon }}</a></td>
+            <td>{{ data.rayon.nomRayon }} </td>
+            <td>{{ data.total_stock }} €</td>
+            <td>
+                <a href="{% url 'dtl_rayon' data.rayon.idRayon %}" class="btn btn-primary mt-2">Détails</a>
+                <a href="{% url 'ray-chng' data.rayon.idRayon %}" class="btn btn-warning mt-2">Modifier</a>
+                <a href="{% url 'dlt-ray' data.rayon.idRayon %}" class="btn btn-danger mt-2">Supprimer</a>
+            </td>
         </tr>
         {% endfor %}
-        <a href="{% url 'crt-ray' %}">Créer un nouveau rayon</a>
     </tbody>
 </table>
 <p>
