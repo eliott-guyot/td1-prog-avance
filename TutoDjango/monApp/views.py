@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.forms import BaseModelForm
-from monApp.forms import ContactUsForm, ProduitForm,CategorieForm,StatutForm,RayonForm
+from monApp.forms import ContactUsForm, ContenirForm, ProduitForm,CategorieForm,StatutForm,RayonForm
 from .models import Contenir, Produit,Statut,Categorie,Rayon
 from django.http import HttpResponse, Http404
 from django.views.generic import *
@@ -11,7 +11,9 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.db.models import Count, Prefetch
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 
 def aboutus(request):
     return render(request, 'monApp/about.html')
@@ -67,7 +69,13 @@ class ProduitListView(ListView):
     template_name = "monApp/list_produits.html"
     context_object_name = "prdts"
     def get_queryset(self):
-        # Charge les catégories et les statuts en même temps
+        # Surcouche pour filtrer les résultats en fonction de la recherche
+        # Récupérer le terme de recherche depuis la requête GET
+        query = self.request.GET.get('search')
+        if query:
+            return Produit.objects.filter(intituleProd__icontains=query).select_related('categorie').select_related('statut')
+        # Si aucun terme de recherche, retourner tous les produits
+        # Charge les catégories en même temps
         return Produit.objects.select_related('categorie').select_related('statut')
     def get_context_data(self, **kwargs):
         context = super(ProduitListView, self).get_context_data(**kwargs)
@@ -88,8 +96,14 @@ class CategorieListView(ListView):
     template_name = "monApp/list_categories.html"
     context_object_name = "cat"
     def get_queryset(self):
-    # Annoter chaque catégorie avec le nombre de produits liés
-        return Categorie.objects.annotate(nb_produits=Count('produits'))
+        # Surcouche pour filtrer les résultats en fonction de la recherche
+        # Récupérer le terme de recherche depuis la requête GET
+        query = self.request.GET.get('search')
+        if query:
+            return Categorie.objects.filter(nomCat__icontains=query)
+        # Si aucun terme de recherche, retourner tous les produits
+        # Charge les catégories en même temps
+        return Categorie.objects.all
     def get_context_data(self, **kwargs):
         context = super(CategorieListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes catégories"
@@ -139,11 +153,14 @@ class RayonListView(ListView):
     template_name = "monApp/list_Rayon.html"
     context_object_name = "ryns"
     def get_queryset(self):
-        # Précharge tous les "contenir" de chaque rayon,
-        # et en même temps le produit de chaque contenir
-        return Rayon.objects.prefetch_related(
-        Prefetch("contenir_rayon", queryset=Contenir.objects.select_related("nomprod"))
-        )
+        # Surcouche pour filtrer les résultats en fonction de la recherche
+        # Récupérer le terme de recherche depuis la requête GET
+        query = self.request.GET.get('search')
+        if query:
+            return Rayon.objects.filter(nomRayon__icontains=query)
+        # Si aucun terme de recherche, retourner tous les produits
+        # Charge les catégories en même temps
+        return Rayon.objects.all()
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes rayons"
@@ -364,3 +381,38 @@ class RayonDeleteView(DeleteView):
     template_name = "monApp/delete_rayon.html"
     success_url = reverse_lazy('lst_rayon')
 
+@login_required(login_url='/monApp/login/')
+def my_view(request):
+    return render(request, 'my_template.html')
+
+# Ajout du décorateur login_required à une CBV
+@method_decorator(login_required, name='dispatch')
+class MyView(TemplateView):
+    template_name = 'my_template.html'
+
+class MyView(TemplateView):
+    template_name = 'my_template.html'
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+class ContenirCreateView(CreateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = "monApp/create_contenir.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon_id = self.kwargs['pk']
+        produit=form.cleaned_data['nomprod']
+        qte=form.cleaned_data['qte']
+        contenir = form.save()
+        if Contenir.objects.filter(produit=produit,rayon_id=rayon_id).exists():
+            contenir=Contenir.objects.get(produit=produit,rayon=rayon)
+            contenir.qte=qte
+        else:
+            contenir =Contenir.objects.check(rayon=rayon,produit=produit)
+        return redirect('dtl-ryn',pk=rayon_id)  
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['ray']=Rayon.objects.get(pk=self.kwargs['pk'])
+        return context
