@@ -1,0 +1,20 @@
+{% extends 'monApp/base.html' %}
+{% block menu %}
+<h1>{{titremenu}}</h1>
+{% endblock %}
+{% block contenu %}
+<h2>{{ prdt.intituleProd }}</h2>
+<ul>
+<li>Référence produit : {{prdt.refProd }} </li>
+<li>Prix unitaire HT : {{ prdt.prixUnitaireProd }} </li>
+<li>Date de fabrication : {{ prdt.dateFabProd }} </li>
+<li>Catégorie : {{ prdt.categorie }} </li>
+<li>Statut : {{ prdt.statut_id }}</li>
+</ul>
+<a href="{% url 'prdt-chng' prdt.refProd %}">modifier</a>
+<br>
+<a href="{% url 'dlt-prdt' prdt.refProd %}">supprimer</a>
+<br>
+<a href="{% url 'lst_prdts' %}">Retour à la liste des produits</a>
+
+{% endblock %}

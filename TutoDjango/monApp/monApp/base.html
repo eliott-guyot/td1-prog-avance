@@ -1,0 +1,67 @@
+<!doctype html>
+{% load static %}
+<html lang="fr">
+
+<head>
+    <meta charset="utf -8">
+    <title>Mon app DJANGO</title>
+    {% block styles %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% endblock %}
+</head>
+
+<body>
+    {% block nav %}
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                </li>
+                {%else%}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+                </li>
+                {%endif%}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lst_prdts' %}">Produits</a>
+
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'lst_cat' %}">Catégories</a>
+
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'lst_rayon' %}">Rayons</a>
+
+                </li>
+                                <li class="nav-item">
+                <a class="nav-link" href="{% url 'lst_stt' %}">Statut</a>
+
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    {% block menu %}{% endblock %}
+    {% endblock %} <main role="main" class="container top-pushed">
+        <div class="jumbotron">
+            {% block contenu %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; Copyright {% now "Y" %} by Titof Produition Copyrigh (c)</p>
+        </div>
+    </footer>
+</body>
+
+</html>

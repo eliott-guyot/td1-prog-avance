@@ -1,0 +1,31 @@
+
+        {% extends 'monApp/base.html' %}
+{% block menu %}
+<h1>Liste des categorie</h1>
+{% endblock %}
+{% block contenu %}
+<table class="table">
+<thead>
+<th>Id</th>
+<th>Nom categorie</th>
+</thead>
+<tbody>
+{% for categorie in cat %}
+<tr>
+<td>{{ categorie.nomCat }} </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<p>
+J'ai
+{% if prdts|length < 5 %}
+peu de
+{% elif prdts|length < 10 %}
+quelques
+{% else %}
+beaucoup de
+{% endif %}
+categorie préférés.
+</p>
+{% endblock %}

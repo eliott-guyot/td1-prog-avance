@@ -1,0 +1,37 @@
+{% extends 'monApp/base.html' %}
+{% block menu %}
+<h1>{{titremenu}}</h1>
+{% endblock %}
+{% block contenu %}
+<!-- Barre de recherche -->
+<p class="lead mb-3 ml-0">Rechercher un élément...</p>
+<form method="GET" action="">
+<input class="form-control" type="text" name="search" placeholder="Tapez ici votre recherche"
+value="{{ request.GET.search }}">
+<button type="submit" class="btn btn-success mt-2">Rechercher</button>
+</form>
+<table class="table">
+<table class="table">
+    <thead>
+        <th>Id</th>
+        <th>Nom catégorie</th>
+        <th>Nombre de Produits</th>
+    </thead>
+    <tbody>
+        {% for cate in cat %}
+        <tr>
+            <td><a href="{% url 'dtl_cat' cate.idCat %}">{{ cate.idCat }}</a></td>
+            <td>{{ cate.nomCat }} </td>
+            <td>{{ cate.nb_produits }} </td>
+            <td>
+                <a href="{% url 'dtl_cat' cate.idCat %}" class="btn btn-primary mt-2">Détails</a>
+                <a href="{% url 'cat-chng' cate.idCat %}" class="btn btn-warning mt-2">Modifier</a>
+                <a href="{% url 'dlt-cat' cate.idCat %}" class="btn btn-danger mt-2">Supprimer</a>
+
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -402,17 +402,76 @@ class ContenirCreateView(CreateView):
     template_name = "monApp/create_contenir.html"
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        rayon_id = self.kwargs['pk']
-        produit=form.cleaned_data['nomprod']
-        qte=form.cleaned_data['qte']
-        contenir = form.save()
-        if Contenir.objects.filter(produit=produit,rayon_id=rayon_id).exists():
-            contenir=Contenir.objects.get(produit=produit,rayon=rayon)
-            contenir.qte=qte
-        else:
-            contenir =Contenir.objects.check(rayon=rayon,produit=produit)
-        return redirect('dtl-ryn',pk=rayon_id)  
-    def get_context_data(self,**kwargs):
-        context=super().get_context_data(**kwargs)
-        context['ray']=Rayon.objects.get(pk=self.kwargs['pk'])
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pk'])
+        produit = form.cleaned_data.get('nomprod')
+        qte = form.cleaned_data.get('qte')
+
+        contenir, created = Contenir.objects.get_or_create(
+            nomprod=produit,
+            nomRayon=rayon,
+            defaults={'qte': qte}
+        )
+        if not created:
+            contenir.qte = qte
+            contenir.save()
+
+        return redirect('dtl_rayon', pk=rayon.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ray'] = get_object_or_404(Rayon, pk=self.kwargs['pk'])
+        return context
+    
+class ContenirUpdateView(UpdateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = "monApp/update_contenir.html"
+
+    def get_object(self, queryset=None):
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['idRayon'])
+        produit = get_object_or_404(Produit, pk=self.kwargs['refProd'])
+        return get_object_or_404(Contenir, nomRayon=rayon, nomprod=produit)
+
+    def get_form(self,form_class=None):
+        form = super().get_form(form_class)
+        form.fields["nomprod"].disabled = True
+        return form
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        contenir = form.save(commit=False)
+        contenir.nomRayon = get_object_or_404(Rayon, pk=self.kwargs['idRayon'])
+        contenir.nomprod = get_object_or_404(Produit, pk=self.kwargs['refProd'])
+
+        if contenir.qte is None or contenir.qte <= 0:
+            Contenir.objects.filter(pk=self.get_object().pk).delete()
+            return redirect('dtl_rayon', pk=contenir.nomRayon.pk)
+
+        contenir.save()
+        return redirect('dtl_rayon', pk=contenir.nomRayon.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ray'] = get_object_or_404(Rayon, pk=self.kwargs['idRayon'])
+        context['prod'] = get_object_or_404(Produit, pk=self.kwargs['refProd'])
+        context['titremenu'] = "Modifier la quantité"
+        return context
+class ContenirDeleteView(DeleteView):
+    model = Contenir
+    template_name = "monApp/delete_contenir.html"
+
+    def get_object(self, queryset=None):
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['idRayon'])
+        produit = get_object_or_404(Produit, pk=self.kwargs['refProd'])
+        return get_object_or_404(Contenir, nomRayon=rayon, nomprod=produit)
+
+    def post(self, request, *args, **kwargs):
+        contenir = self.get_object()
+        rayon_id = contenir.nomRayon.pk
+        contenir.delete()
+        return redirect('dtl_rayon', pk=rayon_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ray'] = get_object_or_404(Rayon, pk=self.kwargs['idRayon'])
+        context['prod'] = get_object_or_404(Produit, pk=self.kwargs['refProd'])
+        context['titremenu'] = "Supprimer le produit du rayon"
         return context
