@@ -14,6 +14,7 @@ from django.db.models import Count, Prefetch
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
+import unittest
 
 def aboutus(request):
     return render(request, 'monApp/about.html')
@@ -258,7 +259,7 @@ def ProduitCreate(request):
         form = ProduitForm()
     return render(request, "monApp/create_produit.html", {'form': form})
 
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class ProduitCreateView(CreateView):
     model = Produit
     form_class=ProduitForm
@@ -266,7 +267,8 @@ class ProduitCreateView(CreateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         prdt = form.save()
         return redirect('dtl_prdt', prdt.refProd)
-    
+
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')    
 class ProduitUpdateView(UpdateView):
     model = Produit
     form_class=ProduitForm
@@ -274,7 +276,7 @@ class ProduitUpdateView(UpdateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         prdt = form.save()
         return redirect('dtl_prdt', prdt.refProd)
-    
+
 def ProduitUpdate(request, id):
     prdt = Produit.objects.get(id=id)
     if request.method == 'POST':
@@ -287,7 +289,7 @@ def ProduitUpdate(request, id):
     else:
         form = ProduitForm(instance=prdt)
     return render(request,'monApp/update_produit.html', {'form': form})
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class ProductDeleteView(DeleteView):
     model = Produit
     template_name = "monApp/delete_produit.html"
@@ -307,7 +309,7 @@ def produit_delete(request, id):
 
 
 
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class CategorieCreateView(CreateView):
     model = Categorie
     form_class=CategorieForm
@@ -315,7 +317,8 @@ class CategorieCreateView(CreateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         cat = form.save()
         return redirect('dtl_cat', cat.idCat)
-    
+
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')    
 class CategorieUpdateView(UpdateView):
     model = Categorie
     form_class=CategorieForm
@@ -324,7 +327,7 @@ class CategorieUpdateView(UpdateView):
         cat = form.save()
         return redirect('cat-chng', cat.idCat)
     
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class CategorieDeleteView(DeleteView):
     model = Categorie
     template_name = "monApp/delete_categorie.html"
@@ -333,7 +336,7 @@ class CategorieDeleteView(DeleteView):
 
 
 
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class StatutCreateView(CreateView):
     model = Statut
     form_class=StatutForm
@@ -342,6 +345,7 @@ class StatutCreateView(CreateView):
         stt = form.save()
         return redirect('dtl_stt', stt.idStatut)
     
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class StatutUpdateView(UpdateView):
     model = Statut
     form_class=StatutForm
@@ -350,14 +354,14 @@ class StatutUpdateView(UpdateView):
         stt = form.save()
         return redirect('stt-chng', stt.idStatut)
     
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class StatutDeleteView(DeleteView):
     model = Statut
     template_name = "monApp/delete_statut.html"
     success_url = reverse_lazy('lst_stt')
 
 
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class RayonCreateView(CreateView):
     model = Rayon
     form_class=RayonForm
@@ -366,7 +370,7 @@ class RayonCreateView(CreateView):
         ray = form.save()
         return redirect('dtl_ray', ray.idRayon)
     
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class RayonUpdateView(UpdateView):
     model = Rayon
     form_class=RayonForm
@@ -375,7 +379,7 @@ class RayonUpdateView(UpdateView):
         ray = form.save()
         return redirect('ray-chng', ray.idRayon)
     
-
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class RayonDeleteView(DeleteView):
     model = Rayon
     template_name = "monApp/delete_rayon.html"
@@ -389,13 +393,11 @@ def my_view(request):
 @method_decorator(login_required, name='dispatch')
 class MyView(TemplateView):
     template_name = 'my_template.html'
-
-class MyView(TemplateView):
-    template_name = 'my_template.html'
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
     
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class ContenirCreateView(CreateView):
     model = Contenir
     form_class = ContenirForm
@@ -422,6 +424,7 @@ class ContenirCreateView(CreateView):
         context['ray'] = get_object_or_404(Rayon, pk=self.kwargs['pk'])
         return context
     
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class ContenirUpdateView(UpdateView):
     model = Contenir
     form_class = ContenirForm
@@ -454,6 +457,8 @@ class ContenirUpdateView(UpdateView):
         context['prod'] = get_object_or_404(Produit, pk=self.kwargs['refProd'])
         context['titremenu'] = "Modifier la quantité"
         return context
+
+@method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class ContenirDeleteView(DeleteView):
     model = Contenir
     template_name = "monApp/delete_contenir.html"
