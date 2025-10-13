@@ -9,8 +9,7 @@ class Statut(models.Model):
     idStatut=models.AutoField(primary_key=True)
     libelleStatut=models.CharField(max_length=200)
     def __str__(self):
-        return f"{self.idStatut} pour : {self.libelleStatut}"
-
+        return self.libelleStatut
 class Produit(models.Model):
     refProd = models.AutoField(primary_key=True)
     intituleProd = models.CharField(max_length=200)
@@ -34,5 +33,5 @@ class Contenir(models.Model):
     class Meta:
         unique_together=("nomprod","nomRayon")
     def __str__(self):
-        return f"{self.nomprod} dans {self.nomRayon} pour {self.qte}"
+        return self.nomprod,self.nomRayon, self.qte
 
