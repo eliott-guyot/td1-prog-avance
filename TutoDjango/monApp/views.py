@@ -368,7 +368,7 @@ class RayonCreateView(CreateView):
     template_name = "monApp/create_rayon.html"
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         ray = form.save()
-        return redirect('dtl_ray', ray.idRayon)
+        return redirect('dtl_rayon', pk=ray.idRayon)
     
 @method_decorator(login_required(login_url='/monApp/login/'), name='dispatch')
 class RayonUpdateView(UpdateView):

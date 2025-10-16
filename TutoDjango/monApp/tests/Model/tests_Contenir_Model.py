@@ -10,14 +10,15 @@ class ContenirModelTest(TestCase):
         self.ray = Rayon.objects.create(nomRayon="RayonPourTest")
         self.ctgr = Contenir.objects.create(qte=2, nomprod=self.prdt, nomRayon=self.ray)
     def test_Contenir_creation(self):
-        self.assertEqual(self.ctgr.nomContenir, 2,nomprod=self.prdt, nomRayon=self.ray)
+        self.assertEqual(self.ctgr.qte, 2)
     def test_string_representation(self):
-        self.assertEqual(str(self.ctgr),self.prdt,self.ray,self.ctgr.qte )
+        expected = (self.prdt, self.ray, self.ctgr.qte)
+        self.assertEqual(self.ctgr.__str__(), expected)
     def test_Contenir_updating(self):
         self.ctgr.qte = 2
         self.ctgr.save()
         # Récupérer l'objet mis à jour
-        updated_ctgr = Contenir.objects.get(idContenir=self.ctgr.idContenir)
+        updated_ctgr = Contenir.objects.get(pk=self.ctgr.pk)
         self.assertEqual(updated_ctgr.qte, 2)
     def test_Contenir_deletion(self):
         self.ctgr.delete()
